@@ -53,7 +53,7 @@ class PrimeCounter{
             for(int j = x; j <= y; j++){
                 if(composite[j-x]!=1) {
                     primes.push_back(j);  
-                    primes_counter += 1 
+                    primes_counter += 1; 
                 } 
             }
             composite.reset(); 
