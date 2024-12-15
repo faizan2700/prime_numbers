@@ -69,7 +69,7 @@ class PrimeCounter{
            if(composite[i] == 1) continue; 
            this->ps.push_back(i); 
            primes.push_back(i); 
-           primes_counter += 1 
+           primes_counter += 1; 
            if(1LL*i*i > block_size) continue; 
            for(int j = i*i; j <= block_size; j+=i){
                composite[j] = 1; 
