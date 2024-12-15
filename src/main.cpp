@@ -14,7 +14,7 @@ const int block_size = 1e7;
 class PrimeCounter{ 
    public: 
    std::atomic<int> shared_resource = 0;
-   int total_blocks = 10; 
+   int total_blocks = 1; 
    int total_threads = 100; 
    vector<long long> primes; 
    vector<long long> ps; 
