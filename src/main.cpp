@@ -1,25 +1,86 @@
-#include <iostream>
-#include <thread> 
+// Online C++ compiler to run C++ program online
+#include <iostream> 
+#include <vector> 
+#include <bitset> 
+#include <thread>  
+#include <atomic> 
+#include <mutex> 
 
-// Function that each thread will run
-void print_numbers(int thread_id) {
-    for (int i = 1; i <= 5; ++i) {
-        std::cout << "Thread " << thread_id << ": " << i << std::endl;
-    }
-}
+using namespace std;
+
+const int block_size = 1e8; 
+
+
+class PrimeCounter{ 
+   public: 
+   std::atomic<int> shared_resource = 0;
+   int total_blocks = 1e0; 
+   int total_threads = 1; 
+   vector<int> primes; 
+   vector<int> ps; 
+   std::mutex primes_mutex;  // Mutex to protect shared vector
+   PrimeCounter(){  
+       vector<std::thread> ts; 
+       this->setup(); 
+       int current_starting = block_size; 
+       for(int i = 0; i < total_threads; i++) { 
+          std:thread t1(&PrimeCounter::calculate, this, i, current_starting); 
+          if(i==0) current_starting += (total_blocks-1)*block_size; 
+          else current_starting += total_blocks*block_size; 
+        ts.push_back(std::move(t1)); 
+       }
+       for(int i = 0; i < total_threads; i++) { 
+           ts[i].join(); 
+       }
+   }
+   
+   void calculate(int thread_id, int low){ 
+        std::bitset<block_size> composite; 
+        int x = low+1, y = low + block_size; 
+        if(x<=2) x = 2; 
+        int starting_block_num = 1; 
+        if(thread_id==0) starting_block_num = 2; 
+        for(int i = starting_block_num; i <= total_blocks; i++) { 
+            // cout << x << " " << y << endl; 
+            for(int j = 0; j < (int)ps.size() and 1LL*ps[j]*ps[j] <= y; j++){
+                int start = ((x+ps[j]-1)/ps[j])*ps[j]; 
+                // cout << start << " " << ps[j] << endl; 
+                for(int k = start; k <= y; k+=ps[j]){
+                    composite[k-x]=1; 
+                }
+            }
+            std::lock_guard<std::mutex> lock(primes_mutex);  
+            for(int j = x; j <= y; j++){
+                if(composite[j-x]!=1) {
+                    primes.push_back(j); 
+                } 
+            }
+            composite.reset(); 
+            x = y+1; 
+            y = y + block_size; 
+        }
+   }
+   
+   void setup(){ 
+       std::bitset<block_size> composite; 
+       for(int i = 2; i <= block_size; i++) { 
+           if(composite[i] == 1) continue; 
+           this->ps.push_back(i); 
+           primes.push_back(i); 
+           if(1LL*i*i > block_size) continue; 
+           for(int j = i*i; j <= block_size; j+=i){
+               composite[j] = 1; 
+           }
+       }
+   }
+}; 
 
 int main() {
-    // // Create and start 4 threads
-    std::thread t1(print_numbers, 1);
-    std::thread t2(print_numbers, 2);
-    std::thread t3(print_numbers, 3);
-    std::thread t4(print_numbers, 4);
-
-    // Join all threads with the main thread to ensure they complete execution
-    t1.join();
-    t2.join();
-    t3.join();
-    t4.join();
-
-    return 0;
+    // Write C++ code here
+    PrimeCounter p = PrimeCounter(); 
+    cout << "p_count:" << p.primes.size() << endl; 
+    // for(int i = 0; i < (int)p.primes.size(); i++){
+    //     cout << p.primes[i] << " "; 
+    // } cout << endl; 
+    
 }
