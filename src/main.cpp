@@ -13,9 +13,9 @@ const int block_size = 1e7;
 
 class PrimeCounter{ 
    public: 
-   std::atomic<int> shared_resource = 0;
-   int total_blocks = 1; 
-   int total_threads = 100; 
+   std::atomic<int> primes_counter = 0;
+   int total_blocks = 5; 
+   int total_threads = 20; 
    vector<long long> primes; 
    vector<long long> ps; 
    std::mutex primes_mutex;  // Mutex to protect shared vector
@@ -52,10 +52,12 @@ class PrimeCounter{
             std::lock_guard<std::mutex> lock(primes_mutex);  
             for(int j = x; j <= y; j++){
                 if(composite[j-x]!=1) {
-                    primes.push_back(j); 
+                    primes.push_back(j);  
+                    primes_counter += 1 
                 } 
             }
             composite.reset(); 
+            primes.clear(); 
             x = y+1; 
             y = y + block_size; 
         }
@@ -67,6 +69,7 @@ class PrimeCounter{
            if(composite[i] == 1) continue; 
            this->ps.push_back(i); 
            primes.push_back(i); 
+           primes_counter += 1 
            if(1LL*i*i > block_size) continue; 
            for(int j = i*i; j <= block_size; j+=i){
                composite[j] = 1; 
