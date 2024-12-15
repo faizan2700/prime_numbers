@@ -8,16 +8,16 @@
 
 using namespace std;
 
-const int block_size = 1e8; 
+const int block_size = 1e7; 
 
 
 class PrimeCounter{ 
    public: 
    std::atomic<int> shared_resource = 0;
-   int total_blocks = 1; 
+   int total_blocks = 100; 
    int total_threads = 1; 
-   vector<int> primes; 
-   vector<int> ps; 
+   vector<long long> primes; 
+   vector<long long> ps; 
    std::mutex primes_mutex;  // Mutex to protect shared vector
    PrimeCounter(){  
        vector<std::thread> ts; 
