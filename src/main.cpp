@@ -8,14 +8,14 @@
 
 using namespace std;
 
-const int block_size = 1e7; 
+const int block_size = 1e6; 
 
 
 class PrimeCounter{ 
    public: 
    std::atomic<int> primes_counter = 0;
-   int total_blocks = 5; 
-   int total_threads = 20; 
+   int total_blocks = 50; 
+   int total_threads = 200; 
    vector<long long> primes; 
    vector<long long> ps; 
    std::mutex primes_mutex;  // Mutex to protect shared vector
@@ -92,7 +92,8 @@ int main() {
     cout << "Execution Time: " << duration.count() << " seconds" << endl;
 
     // Optionally print the count of primes found
-    cout << "p_count: " << p.primes.size() << endl;
+    cout << "primes_counter: "<< p.primes_counter << endl; 
+    cout << "p_count: " << p.primes.size() << endl; 
     
     return 0;
     // for(int i = 0; i < (int)p.primes.size(); i++){
