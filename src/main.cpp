@@ -1,6 +1,5 @@
 #include <iostream>
 #include <thread> 
-#include "mingw.thread.h"
 
 // Function that each thread will run
 void print_numbers(int thread_id) {
