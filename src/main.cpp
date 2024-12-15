@@ -14,8 +14,8 @@ const int block_size = 1e7;
 class PrimeCounter{ 
    public: 
    std::atomic<int> shared_resource = 0;
-   int total_blocks = 100; 
-   int total_threads = 1; 
+   int total_blocks = 20; 
+   int total_threads = 5; 
    vector<long long> primes; 
    vector<long long> ps; 
    std::mutex primes_mutex;  // Mutex to protect shared vector
