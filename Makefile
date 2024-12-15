@@ -30,4 +30,4 @@ clean:
 
 # Target: run
 run: $(BUILD_DIR)/main
-	$(BUILD_DIR)\main    # Run the executable from the build directory
+	$(BUILD_DIR)/main    # Run the executable from the build directory
