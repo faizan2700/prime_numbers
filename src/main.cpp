@@ -24,7 +24,7 @@ class PrimeCounter{
        this->setup(); 
        int current_starting = block_size; 
        for(int i = 0; i < total_threads; i++) { 
-          std:thread t1(&PrimeCounter::calculate, this, i, current_starting); 
+          std::thread t1(&PrimeCounter::calculate, this, i, current_starting); 
           if(i==0) current_starting += (total_blocks-1)*block_size; 
           else current_starting += total_blocks*block_size; 
         ts.push_back(std::move(t1)); 
@@ -42,7 +42,7 @@ class PrimeCounter{
         if(thread_id==0) starting_block_num = 2; 
         for(int i = starting_block_num; i <= total_blocks; i++) { 
             // cout << x << " " << y << endl; 
-            for(int j = 0; j < (int)ps.size() and 1LL*ps[j]*ps[j] <= y; j++){
+            for(int j = 0; j < (int)ps.size() && 1LL*ps[j]*ps[j] <= y; j++){
                 int start = ((x+ps[j]-1)/ps[j])*ps[j]; 
                 // cout << start << " " << ps[j] << endl; 
                 for(int k = start; k <= y; k+=ps[j]){
