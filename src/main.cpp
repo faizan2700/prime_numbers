@@ -8,7 +8,7 @@
 
 using namespace std;
 
-const int block_size = 1e7; 
+const int block_size = 1e8; 
 
 
 class PrimeCounter{ 
@@ -76,9 +76,22 @@ class PrimeCounter{
 }; 
 
 int main() {
-    // Write C++ code here
-    PrimeCounter p = PrimeCounter(); 
-    cout << "p_count:" << p.primes.size() << endl; 
+    auto start = std::chrono::high_resolution_clock::now();
+
+    // Call PrimeCounter to start the process
+    PrimeCounter p = PrimeCounter();
+
+    // Record the end time
+    auto end = std::chrono::high_resolution_clock::now();
+
+    // Calculate the duration in seconds
+    auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - start);
+    cout << "Execution Time: " << duration.count() << " seconds" << endl;
+
+    // Optionally print the count of primes found
+    cout << "p_count: " << p.primes.size() << endl;
+    
+    return 0;
     // for(int i = 0; i < (int)p.primes.size(); i++){
     //     cout << p.primes[i] << " "; 
     // } cout << endl; 
