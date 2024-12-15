@@ -8,13 +8,13 @@
 
 using namespace std;
 
-const int block_size = 1e8; 
+const int block_size = 1e7; 
 
 
 class PrimeCounter{ 
    public: 
    std::atomic<int> shared_resource = 0;
-   int total_blocks = 1e0; 
+   int total_blocks = 1; 
    int total_threads = 1; 
    vector<int> primes; 
    vector<int> ps; 
