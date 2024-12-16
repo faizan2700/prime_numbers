@@ -26,7 +26,7 @@ $(BUILD_DIR)/utils.o: src/utils.cpp include/header.h
 
 # Target: clean
 clean:
-	rm -rf $(BUILD_DIR)/*
+	rm $(BUILD_DIR)/* 
 
 # Target: run
 run: $(BUILD_DIR)/main
