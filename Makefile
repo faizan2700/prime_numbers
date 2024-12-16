@@ -4,7 +4,7 @@ $(info Using compiler: $(CC))
 
 # Specify compiler flags (optional) 
 # CFLAGS = -Wall -Wextra -Werror -I./include -I../threading_lib -std=c++11
-CFLAGS = -Wall -Wextra -Werror -I./include -I../threading_lib -std=c++17  # Add the relative include path
+CFLAGS = -Wall -Wextra -Werror -I./include -I../threading_lib -std=c++23  # Add the relative include path
 
 # Specify the build directory
 BUILD_DIR = build

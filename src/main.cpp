@@ -8,20 +8,20 @@
 
 using namespace std;
 
-const int block_size = 1e6; 
-
+const int block_size = 1e6;  
 
 class PrimeCounter{ 
    public: 
-   std::atomic<int> primes_counter = 0;
-   int total_blocks = 50; 
-   int total_threads = 200; 
+   std::atomic<long long> primes_counter; 
+   int total_blocks = 10000; 
+   int total_threads = 1; 
    vector<long long> primes; 
    vector<long long> ps; 
-   std::mutex primes_mutex;  // Mutex to protect shared vector
+   std::mutex primes_vector_mutex; 
    PrimeCounter(){  
+       primes_counter = 0; 
        vector<std::thread> ts; 
-       this->setup(); 
+       setup(); 
        int current_starting = block_size; 
        for(int i = 0; i < total_threads; i++) { 
           std::thread t1(&PrimeCounter::calculate, this, i, current_starting); 
@@ -34,26 +34,23 @@ class PrimeCounter{
        }
    }
    
-   void calculate(int thread_id, int low){ 
+   void calculate(int thread_id, long long low){ 
         std::bitset<block_size> composite; 
-        int x = low+1, y = low + block_size; 
+        long long x = low+1, y = low + block_size; 
         if(x<=2) x = 2; 
         int starting_block_num = 1; 
         if(thread_id==0) starting_block_num = 2; 
         for(int i = starting_block_num; i <= total_blocks; i++) { 
-            // cout << x << " " << y << endl; 
             for(int j = 0; j < (int)ps.size() && 1LL*ps[j]*ps[j] <= y; j++){
-                int start = ((x+ps[j]-1)/ps[j])*ps[j]; 
-                // cout << start << " " << ps[j] << endl; 
-                for(int k = start; k <= y; k+=ps[j]){
+                long long start = ((x+ps[j]-1)/ps[j])*ps[j]; 
+                for(long long k = start; k <= y; k+=ps[j]){
                     composite[k-x]=1; 
                 }
             }
-            std::lock_guard<std::mutex> lock(primes_mutex);  
-            for(int j = x; j <= y; j++){
-                if(composite[j-x]!=1) {
-                    primes.push_back(j);  
-                    primes_counter += 1; 
+            
+            for(long long j = x; j <= y; j++){
+                if(composite[j-x]!=1) { 
+                    primes_counter += 1;  
                 } 
             }
             composite.reset(); 
@@ -80,24 +77,14 @@ class PrimeCounter{
 
 int main() {
     auto start = std::chrono::high_resolution_clock::now();
-
-    // Call PrimeCounter to start the process
     PrimeCounter p = PrimeCounter();
-
-    // Record the end time
     auto end = std::chrono::high_resolution_clock::now();
 
-    // Calculate the duration in seconds
     auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - start);
     cout << "Execution Time: " << duration.count() << " seconds" << endl;
 
-    // Optionally print the count of primes found
     cout << "primes_counter: "<< p.primes_counter << endl; 
-    cout << "p_count: " << p.primes.size() << endl; 
     
-    return 0;
-    // for(int i = 0; i < (int)p.primes.size(); i++){
-    //     cout << p.primes[i] << " "; 
-    // } cout << endl; 
-    
+    return 0; 
 }
+
